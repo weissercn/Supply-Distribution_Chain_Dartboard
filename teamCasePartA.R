@@ -7,18 +7,26 @@ historical$DP = log10(historical$Sales/historical$Population)
 #independent variables
 historical$Season = factor(historical$Season)
 historical$LOGincome = log10(historical$Income)
-historical$Week_Num_new = historical$Week + (historical$Year-2012)*52
 
 #Split training/testing
 histTrain = historical[historical$Year <= 2013,]
 histTest = historical[historical$Year > 2013,]
 
 #Create model
-mod = lm(DP~LOGincome+Week_Num_new+Season,data=histTrain)
+mod = lm(DP~LOGincome+Week_Num+Season,data=histTrain)
 
 summary(mod)
 
 #Performance metrics
+pred = predict(mod,newdata=histTrain)
+SSE = sum((pred - histTrain$DP)^2)
+SSE
+train.mean = mean(histTrain$DP)
+SST = sum((train.mean - histTrain$DP)^2)
+SST
+R2 = 1 - SSE/SST
+R2
+
 pred = predict(mod,newdata=histTest)
 SSE = sum((pred - histTest$DP)^2)
 SSE
@@ -47,3 +55,6 @@ predFuture = 10^predFuture*future$Population
 
 #Append predicted sales to 'future' dataframe
 future$Sales = predFuture
+
+#Write a new CSV file
+write.csv(future, 'futurePrediction.csv',row.names = FALSE)
