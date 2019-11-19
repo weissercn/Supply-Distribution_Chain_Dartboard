@@ -46,15 +46,14 @@ future = read.csv('Dartboard_future.csv')
 #create independent variables
 future$Season = factor(future$Season)
 future$LOGincome = log10(future$Income)
-future$Week_Num_new = future$Week + (future$Year-2012)*52
 
 #Apply model
-predFuture = predict(mod,newData=future)
+predFuture = predict(mod,future)
 #Convert dependent variable to actual sales
-predFuture = 10^predFuture*future$Population
+predFutureSales = (10^predFuture)*future$Population
 
 #Append predicted sales to 'future' dataframe
-future$Sales = predFuture
+future$Sales = predFutureSales
 
 #Write a new CSV file
 write.csv(future, 'futurePrediction.csv',row.names = FALSE)

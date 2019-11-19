@@ -98,7 +98,7 @@ model0 = Model(solver=GurobiSolver(MIPGap=0.0001));
 # Note: This decision variable determines whether DC i (row) serves county j (column)
 # NOte: This decision variable is binary, because we assumed that all the demand from one county is served by the same DC
 @variable(model0, x[1:num_dc,1:num_counties], Bin); #if DC i serves county j
-@variable(model0, cc[1:num_dc]); # actually built DC size   sqrfoot
+@variable(model0, cc[1:num_dc] >= 0); # actually built DC size   sqrfoot
 @variable(model0, z[1:num_dc], Bin); #bool if DC i is built
 
 # Minimize the sum of transportation costs over the 2012-2013 period
