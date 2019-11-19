@@ -42,17 +42,12 @@ using Gurobi
 # Loading the historical data file as a dataframe
 df = CSV.read("futurePrediction.csv"; header=true);
 df = df[:,[:FIPS_Code,:Latitude,:Longitude,:Week_Num,:Sales]]
+# Using same variable name as before, but changing week nums
+df_1to104 = df[(df.Week_Num .<= 312),:];
+df_97to104 = df_1to104[(df_1to104.Week_Num .> 304),:];
+
 # Loading DC data
 dc = CSV.read("Dartboard_DCs.csv"; header=true);
-# Selecting only the three existing DCs
-#dc = dc[1:3,:];
-
-##### Wrangling
-# Extracting data for the period 2012 to 2013 only (i.e weeks 1 to 104).
-# *** This is a different planning horizon from the one described in the case ***
-df_1to104 = df[(df.Week_Num_new .<= 312),:];
-# Extracting data for the last 8 weeks in 2013 - the "peak" demand
-df_97to104 = df_1to104[(df_1to104.Week_Num .> 304),:];
 
 # Summarizing bt County (while keeping Latitude and Longitude info)
 df_1to104_county = by(df_1to104, [:FIPS_Code, :Latitude, :Longitude], :Sales => sum)
@@ -77,15 +72,9 @@ for i=1:num_dc, j=1:num_counties
                               LLA(df_1to104_county[j,:Latitude], df_1to104_county[j,:Longitude],0.0))/1609.34 # meters per mile
 end
 
-distances
-
-# TO BE DONE
-
-v =  dc[:,:Variable_Cost] * 13.5 / 5; # cost per square foot for DC
-trans_cost = 1.55/20; # cost per pallet mile   $/pallet/mile
-fixed_cost_DC = 25000000; # is this the right unit  $
-
-# End TO BE DONE
+v =  dc[:,:Variable_Cost] * 13.5 / 5;   # cost per pallet capacity
+trans_cost = 1.55/20;                   # cost per pallet mile   $/pallet/mile
+fixed_cost_DC = 25000000;               # Fixed cost per DC ($)
 
 ##### Optimization Model
 

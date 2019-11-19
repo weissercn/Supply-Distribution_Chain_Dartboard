@@ -18,7 +18,6 @@ mod = lm(DP~LOGincome+Week_Num+Season,data=histTrain)
 summary(mod)
 
 #Performance metrics
-pred = predict(mod,newdata=histTrain)
 SSE = sum((pred - histTrain$DP)^2)
 SSE
 train.mean = mean(histTrain$DP)
