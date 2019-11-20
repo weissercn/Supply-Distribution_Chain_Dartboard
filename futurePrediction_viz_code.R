@@ -2,9 +2,9 @@ library(dplyr)
 library(tidyverse)
 library(readxl)
 
-setwd("~/Documents/School/Fall 2019/Analytics Edge/Case/Supply-Distribution_Chain_Dartboard")
+#setwd("~/Documents/School/Fall 2019/Analytics Edge/Case/Supply-Distribution_Chain_Dartboard")
 
-futurePrediction_viz <- read_excel("futurePrediction_viz.xlsx")
+futurePrediction_viz <- read.csv("futurePrediction.csv")
 
 future = futurePrediction_viz
 
